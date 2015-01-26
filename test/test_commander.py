@@ -15,6 +15,8 @@ from command_output_pipe_base import CommandOutputPipeBase, OutputError
 
 class CommanderTester(unittest.TestCase):
 
+# Test run_command
+
   def test_verbose_output(self):
     saved_stdout = sys.stdout
     try:
@@ -76,6 +78,26 @@ class CommanderTester(unittest.TestCase):
     commander = Commander()
     assert commander.run_command(["echo", "Hello World!"]) == 0
     assert commander.run_command(["ls", "eaeuohtnuoeahtnouahtn"]) == 1
+
+# Test run_chained_commands
+
+  def test_simple_chained_command(self):
+    commander = Commander()
+    assert 0 == commander.run_chained_commands([(["echo", "hello world"], []), (["grep", "hello"], [])])
+
+  def test_failing_chained_command(self):
+    commander = Commander()
+    assert 1 == commander.run_chained_commands([(["echo", "hello world"], []), (["grep", "auohetn"], [])])
+
+  def test_longer_chained_command(self):
+    commander = Commander()
+    assert 0 == commander.run_chained_commands([(["echo", "hello world"], []), (["sed", "s/hello/mrcat/g"], []), (["sed", "s/mrcat/auohetn/g"], []), (["grep", "auohetn"], [])])
+
+  def test_output_from_chained_command(self):
+    out = CommandOutputPipeBase(False)
+    commander = Commander(out)
+    assert 0 == commander.run_chained_commands([(["echo", "hello world"], []), (["grep", "hello"], [])])
+    assert out.stdout[0] == "hello world\n"
 
 if __name__ == "__main__": unittest.main()
 
