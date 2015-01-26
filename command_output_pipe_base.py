@@ -1,8 +1,7 @@
 import sys
 import re
 
-class OutputError(RuntimeError):
-  pass
+from output_error import OutputError
 
 class CommandOutputPipeBase:
 
