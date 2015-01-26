@@ -68,9 +68,11 @@ class Commander:
               self.command_output_pipe.put_error_line(line)
             else:
               break
-        self.command_output_pipe.stop()
+          self.command_output_pipe.stop()
+
         return p.returncode
 
-    self.command_output_pipe.stop()
+    if self.command_output_pipe:
+      self.command_output_pipe.stop()
     return 0
 
