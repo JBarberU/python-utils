@@ -8,12 +8,19 @@ from command_output_pipe_base import CommandOutputPipeBase
 
 class Commander:
 
-  def __init__(self, command_output_pipe = None):
+  def __init__(self, command_output_pipe = None, debug = False):
     self.command_output_pipe = command_output_pipe
+    self.debug = debug
+
+  def __debug_command(self, args):
+    if self.debug:
+      self.command_output_pipe.put_line("running command: {}\n".format(" ".join(args)));
 
   def run_command(self, args):
     if self.command_output_pipe:
       self.command_output_pipe.start()
+
+    self.__debug_command(args)
 
     p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
@@ -42,6 +49,8 @@ class Commander:
     for (args, err_codes) in commands:
       if 0 not in err_codes:
         err_codes.append(0)
+
+      self.__debug_command(args)
 
       if not proc_list:
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
