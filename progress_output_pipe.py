@@ -4,8 +4,8 @@ from log import Log
 
 class ProgressOutputPipe(CommandOutputPipeBase):
 
-  def __init__(self):
-    CommandOutputPipeBase.__init__(self, False)
+  def __init__(self, verbose = False, unacceptable_output = []):
+    CommandOutputPipeBase.__init__(self, verbose, unacceptable_output)
 
   def put_line(self, line):
     CommandOutputPipeBase.put_line(self, line)
